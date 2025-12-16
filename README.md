@@ -3,6 +3,7 @@
 
 Cashkey is a web application that helps users visualize their annual cash flow with a Sankey diagram. The app makes it easy to track income sources and expenses, see the balance, and share the visualization with others.
 
+Modified by [Redis Kostalli](https://cored.al) for VAT (20%) support on income and automatic VAT calculation as expense, for small businesses and freelancers in Albania.
 ## Why
 
 - Money is like water. It flows in and out of our lives.

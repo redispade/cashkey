@@ -4,6 +4,9 @@ export interface CashflowItem {
   name: string;
   amount: number;
   color?: string;
+  vatIncluded?: boolean;
+  vatAmount?: number;
+  grossAmount?: number;
 }
 
 export interface SankeyNode {

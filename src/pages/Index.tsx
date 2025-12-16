@@ -9,12 +9,22 @@ import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 
 const title = "Cashkey";
-const tagline = "Visualize your cash flow";
+const tagline = "Visualize your business cash flow";
 const description = "Money comes, money goes. How does your money move? Visualize your cash flow with a simple diagram that's easy to make and private.";
 
 const Index = () => {
   const [incomes, setIncomes] = useState<CashflowItem[]>([]);
   const [expenses, setExpenses] = useState<CashflowItem[]>([]);
+  const vatTotal = incomes.reduce((sum, income) => sum + (income.vatAmount ?? 0), 0);
+  const shouldShowVatRow = vatTotal > 0 || incomes.length > 0 || expenses.length > 0;
+  const vatExpense: CashflowItem = {
+    id: 'auto-vat-expense',
+    name: '🧾 VAT (auto)',
+    amount: vatTotal,
+  };
+  const expensesForSankey = vatTotal > 0
+    ? [vatExpense, ...expenses]
+    : expenses;
   
   // Update the document title and metadata
   useEffect(() => {
@@ -76,26 +86,24 @@ const Index = () => {
     } else {
       // Sample data for first-time users with realistic U.S. median values
       setIncomes([
-        { id: uuidv4(), name: '💵 Paycheck', amount: 54132 }, // Median U.S. annual salary
-        { id: uuidv4(), name: '💰 Side Gig', amount: 5000 }, // As specified
-        { id: uuidv4(), name: '🤑 Interest', amount: 500 }, // As specified
-        { id: uuidv4(), name: '📈 Dividends', amount: 500 }, // As specified
-        { id: uuidv4(), name: '💳 Credit Card Cashback', amount: 100 }, // As specified
+        { id: uuidv4(), name: '💼 Client', amount: 54132 },
+        { id: uuidv4(), name: '📦 Other Client', amount: 50000 },
+        { id: uuidv4(), name: '📋 Small Client', amount: 10000 },
+        { id: uuidv4(), name: '🧾 Small Client', amount: 5000 },
+        { id: uuidv4(), name: '🔁 Other Client', amount: 100 },
       ]);
-      
+
       setExpenses([
-        { id: uuidv4(), name: '🏡 Housing', amount: 16608 }, // Median U.S. rent for 1-bedroom ($1,384/month)
-        { id: uuidv4(), name: '🍔 Food', amount: 8172 }, // Median U.S. food expense ($681/month)
-        { id: uuidv4(), name: '🏥 Healthcare', amount: 7610 }, // $6,468 Silver plan 1 person + $1,142 out of pocket annually
-        { id: uuidv4(), name: '🚙 Transportation', amount: 5676 }, // Median U.S. car lease payment ($473/month)
-        { id: uuidv4(), name: '🎓 Education', amount: 5000 },
-        { id: uuidv4(), name: '🏝️ Vacation', amount: 4940 }, 
+        { id: uuidv4(), name: '🏠 Rent/Mortgage', amount: 16608 },
+        { id: uuidv4(), name: '📱 Phone Bill', amount: 7610 },
+        { id: uuidv4(), name: '🚌 Transportation', amount: 5676 },
+        { id: uuidv4(), name: '🏛️ Local Taxes', amount: 5000 },
         { id: uuidv4(), name: '💡 Utilities', amount: 4475 },
-        { id: uuidv4(), name: '🛍️ Shopping', amount: 3000 },
-        { id: uuidv4(), name: '🎭 Entertainment', amount: 1500 },
+        { id: uuidv4(), name: '🛡️ Social Security', amount: 3000 },
+        { id: uuidv4(), name: '🧰 Business Expenses', amount: 1500 },
         { id: uuidv4(), name: '🎁 Gifts', amount: 1000 },
-        { id: uuidv4(), name: '🎗️ Charity', amount: 1000 },
-        ]);
+        { id: uuidv4(), name: '🔄 Other', amount: 1000 },
+      ]);
     }
   }, []);
   
@@ -138,7 +146,7 @@ const Index = () => {
             {/* Sankey diagram visualization */}
             <SankeyDiagram 
               incomes={incomes} 
-              expenses={expenses} 
+              expenses={expensesForSankey} 
               className="animate-fade-in [animation-delay:300ms]"
             />
             
@@ -163,6 +171,8 @@ const Index = () => {
             <CashflowForm
               incomes={incomes}
               expenses={expenses}
+              vatTotal={vatTotal}
+              showVatRow={shouldShowVatRow}
               onUpdateIncomes={setIncomes}
               onUpdateExpenses={setExpenses}
             />

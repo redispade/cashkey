@@ -9,6 +9,8 @@ import CashflowSummary from './cashflow/CashflowSummary';
 interface CashflowFormProps {
   incomes: CashflowItem[];
   expenses: CashflowItem[];
+  vatTotal: number;
+  showVatRow: boolean;
   onUpdateIncomes: (incomes: CashflowItem[]) => void;
   onUpdateExpenses: (expenses: CashflowItem[]) => void;
   className?: string;
@@ -17,6 +19,8 @@ interface CashflowFormProps {
 const CashflowForm: React.FC<CashflowFormProps> = ({
   incomes,
   expenses,
+  vatTotal,
+  showVatRow,
   onUpdateIncomes,
   onUpdateExpenses,
   className,
@@ -32,6 +36,8 @@ const CashflowForm: React.FC<CashflowFormProps> = ({
       {/* Expense Section */}
       <ExpenseSection 
         expenses={expenses} 
+        vatTotal={vatTotal}
+        showVatRow={showVatRow}
         onUpdateExpenses={onUpdateExpenses} 
       />
       
@@ -39,6 +45,7 @@ const CashflowForm: React.FC<CashflowFormProps> = ({
       <CashflowSummary 
         incomes={incomes} 
         expenses={expenses} 
+        vatTotal={vatTotal}
       />
     </div>
   );

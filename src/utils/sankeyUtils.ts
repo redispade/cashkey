@@ -10,11 +10,10 @@ export const COLORS = {
 };
 
 export const formatCurrencyValue = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
+  const formattedAmount = new Intl.NumberFormat('sq-AL', {
+    maximumFractionDigits: 0,
   }).format(value);
+  return `Lek ${formattedAmount}`;
 };
 
 export const processSankeyData = (incomes: CashflowItem[], expenses: CashflowItem[]) => {

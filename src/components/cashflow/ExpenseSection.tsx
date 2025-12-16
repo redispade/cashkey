@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { CashflowItem } from '@/types/cashflow';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, DollarSign, Pencil, Check, X } from 'lucide-react';
+import { Plus, Coins, Check, X, Lock } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,10 +18,19 @@ import {
 
 interface ExpenseSectionProps {
   expenses: CashflowItem[];
+  vatTotal: number;
+  showVatRow: boolean;
   onUpdateExpenses: (expenses: CashflowItem[]) => void;
 }
 
-const ExpenseSection: React.FC<ExpenseSectionProps> = ({ expenses, onUpdateExpenses }) => {
+const generateId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return uuidv4();
+};
+
+const ExpenseSection: React.FC<ExpenseSectionProps> = ({ expenses, vatTotal, showVatRow, onUpdateExpenses }) => {
   const [newExpenseName, setNewExpenseName] = useState('');
   const [newExpenseAmount, setNewExpenseAmount] = useState('');
   const [newExpensePeriod, setNewExpensePeriod] = useState('annual');
@@ -40,8 +50,8 @@ const ExpenseSection: React.FC<ExpenseSectionProps> = ({ expenses, onUpdateExpen
       amount = amount * 12;
     }
     
-    const newExpense: CashflowItem = {
-      id: crypto.randomUUID(),
+      const newExpense: CashflowItem = {
+        id: generateId(),
       name: newExpenseName,
       amount: amount,
     };
@@ -99,6 +109,25 @@ const ExpenseSection: React.FC<ExpenseSectionProps> = ({ expenses, onUpdateExpen
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {/* Auto VAT expense */}
+          {showVatRow && (
+            <div className="flex items-center justify-between p-3 bg-secondary/60 rounded-lg border border-dashed border-muted animate-slide-up">
+              <div className="flex-1 mr-4">
+                <p className="font-medium">🧾 VAT (auto)</p>
+                <p className="text-muted-foreground">{formatCurrency(vatTotal)}/year</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled
+                aria-label="VAT is calculated automatically"
+                className="h-8 w-8 text-muted-foreground"
+              >
+                <Lock className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
           {/* Existing expenses */}
           <div className="space-y-2">
           {expenses.map((expense) => (
@@ -124,7 +153,7 @@ const ExpenseSection: React.FC<ExpenseSectionProps> = ({ expenses, onUpdateExpen
                         onClick={(e) => e.stopPropagation()}
                       />
                       <div className="relative">
-                        <DollarSign className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Coins className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           value={editAmount}
                           onChange={(e) => setEditAmount(e.target.value)}
@@ -201,7 +230,7 @@ const ExpenseSection: React.FC<ExpenseSectionProps> = ({ expenses, onUpdateExpen
                 )}
               />
               <div className="relative flex-shrink-0 w-[70px] md:w-[100px]">
-                <DollarSign className="absolute left-2 md:left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Coins className="absolute left-2 md:left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={newExpenseAmount}
                   onChange={(e) => setNewExpenseAmount(e.target.value)}

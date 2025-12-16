@@ -46,9 +46,19 @@ const Footer: React.FC = () => {
         rel="noopener noreferrer"
         className="footer-link"
       >
-        Gina Trapani
+        Gina Trapani.
       </a>
-      .
+      <br />
+      Modified by{' '}
+      <a
+        href="https://cored.al"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="footer-link"
+      >
+        Redis Kostalli
+      </a>
+      {' '}for VAT (20%) support on income and automatic VAT calculation as expense, for Small businesses/Freelancers in Albania.
     </footer>
   );
 };

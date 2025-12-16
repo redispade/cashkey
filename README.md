@@ -44,11 +44,25 @@ Cashkey is a web application that helps users visualize their annual cash flow w
 - Node.js 16+
 - npm or yarn
 
-### Getting Started
-
+### Run it with docker compose
 ```bash
 # Clone the repository
-git clone https://github.com/ginatrapani/cashkey.git
+git clone https://github.com/cored-al/cashkey.git
+cd cashkey
+
+# Start the development serve
+docker compose up --build dev
+
+# Start the development server
+docker compose up --build dev
+# or Start the preview server (and use a reverse proxy)
+docker compose up --build preview
+
+```
+### or directly
+```bash
+# Clone the repository
+git clone https://github.com/cored-al/cashkey.git
 cd cashkey
 
 # Install dependencies
@@ -57,6 +71,7 @@ npm install
 # Start the development server
 npm run dev
 ```
+
 
 ## License
 

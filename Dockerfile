@@ -4,7 +4,8 @@ FROM node:22-bookworm-slim AS deps
 WORKDIR /app
 ENV NODE_ENV=development
 COPY package.json package-lock.json* ./
-RUN npm install --progress=false
+RUN npm install --progress=false \
+	&& npm install --progress=false @radix-ui/react-checkbox
 
 FROM node:22-bookworm-slim AS dev
 WORKDIR /app
@@ -20,7 +21,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY package.json package-lock.json* ./
-RUN npm install --progress=false --omit=dev
+RUN npm install --progress=false --omit=dev \
+	&& npm install --progress=false --omit=dev @radix-ui/react-checkbox
 COPY . .
 RUN npm run build
 
